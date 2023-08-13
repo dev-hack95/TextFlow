@@ -4,10 +4,7 @@ TextFlow
 A short description of the project.
 
 Architecture
-
-<div id="header" align="center">
-  <img src="https://github.com/dev-hack95/TextFlow/blob/main/reports/figures/TextFlow.png" width="600"/>
-</div>
+![](https://github.com/dev-hack95/TextFlow/blob/main/reports/figures/TextFlow.png)
 
 Project Organization
 ------------
