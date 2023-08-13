@@ -1,0 +1,6 @@
+grpcio
+grpcio-tools
+fastapi
+pyjwt
+SQLAlchemy
+python-dotenv>=0.5.1

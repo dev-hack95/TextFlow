@@ -1,0 +1,22 @@
+version: '3'
+services:
+  db:
+    image: postgres:alpine
+    restart: always
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+    ports:
+      - '5432:5432'
+    volumes:
+      - ./db:/var/lib/postgresql/data
+
+  app:
+    build:
+      image: textflow-auth:1.0
+      context: .
+      dockerfile: ./Dockerfile
+    ports:
+      - 8081:8000
+    volumes:
+      - ./app
