@@ -3,6 +3,12 @@ TextFlow
 
 A short description of the project.
 
+Architecture
+
+<div id="header" align="center">
+  <img src="https://github.com/dev-hack95/TextFlow/blob/main/reports/figures/TextFlow.png" width="600"/>
+</div>
+
 Project Organization
 ------------
 
@@ -36,12 +42,13 @@ Project Organization
     │   │
     │   │
     │   ├── app            <- Backend
-    │   │    ├── __init__.py
-    │   │    ├── db.py
-    │   │    ├── docker-compose.yml
-    │   │    ├── Dockerfile
-    │   │    ├── models.py
-    │   │    └── server.py
+    │   │    └── auth
+    │   │        ├── __init__.py
+    │   │        ├── db.py
+    │   │        ├── docker-compose.yml
+    │   │        ├── Dockerfile
+    │   │        ├── models.py
+    │   │        └── server.py
     │   │
     │   ├── models         <- Scripts to train models and then use trained models to make
     │   │   │                 predictions
@@ -52,6 +59,5 @@ Project Organization
     │       └── visualize.py
     │
     └── tox.ini            <- tox file with settings for running tox; see tox.readthedocs.io
-
 
 --------
