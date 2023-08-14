@@ -1,15 +1,16 @@
 import os
 import sys
-sys.path.append("src")
 import jwt
+import json
 import datetime
 import psycopg2
-import src.app.auth.models as models
+import models
 from psycopg2.extras import RealDictCursor
-from fastapi import FastAPI, requests, Request, Depends, status
-from src.app.auth.db import get_db, engine
-from src.logger import logging
-from src.exception import CustomException
+from fastapi import FastAPI, requests, Request, Depends, status, HTTPException
+from db import get_db, engine
+from tokens import create_token, decode_token
+from logger import logging
+from exception import CustomException
 from sqlalchemy.orm import Session
 
 models.Base.metadata.create_all(bind=engine)
@@ -17,29 +18,49 @@ models.Base.metadata.create_all(bind=engine)
 app = FastAPI()
 
 
-while True:
+@app.post("/v1/signin")
+def signin(email: str, password: str, db: Session = Depends(get_db)):
+    user = db.query(models.Auth).filter(models.Auth.email == email).first()
+
+    if user:
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=f"User with email {email} already present in database")
+    
+    if len(password) < 8:
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Password must be at least eight characters")
+    
+    new_user = models.Auth(email=email, password=password)
+    db.add(new_user)
+    db.commit()
+
+    return {"message": "User registered successfully"}
+
+@app.post("/v1/login")
+def login(email: str, password: str, db: Session = Depends(get_db)):
+    user = db.query(models.Auth).filter(models.Auth.email == email).first()
+
+    if user is None:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f"User with email {email} not found, create a new account")
+    
+    if password != user.password:
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid credentials")
+    secret = "test1234567890"
+    token = create_token(user.email, secret, True)
+    user.token = token
+    db.commit()
+    return {"message": "Logged in successfully"}, status.HTTP_200_OK
+    
+
+@app.post("/v1/validate")
+def validate() -> str:
+    encoded_jwt = Request.headers["Authorization"]
+
+    if not encoded_jwt:
+        return {"message": "Missing Credentials"}, 401
+    
+    encoded_jwt = encoded_jwt.split(" ")[1]
     try:
-        logging.info("Connecting to the database")
-        conn = psycopg2.connect(host = '192.168.29.216',
-                                port=5432,
-                                database = 'auth_service',
-                                user = 'postgres',
-                                password = 'postgres',
-                                cursor_factory=RealDictCursor)
-        cursor = conn.cursor()
-        logging.info("Successfully connetced to database")
-        break
-    except Exception as err:
-        logging.info('Error connecting to database')
-        raise CustomException(err, sys)
-
-@app.post("/login")
-def login(db: Session = Depends(get_db)):
-    auth = Request.auth
-    if not auth:
-        return {"message": "Not authenticated"}, 401
+        decoded = decode_token(encoded_token=encoded_jwt, secret=os.environ.get["JWT"])
+    except:
+        return {'message': f'Token is invalid'}, status.HTTP_401_UNAUTHORIZED
     
-    # Check db for username and password
-    
-
-    
+    return decoded, status.HTTP_200_OK

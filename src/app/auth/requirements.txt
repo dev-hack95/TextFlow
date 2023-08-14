@@ -1,0 +1,5 @@
+fastapi
+pyjwt
+SQLAlchemy
+psycopg2
+python-dotenv>=0.5.1
