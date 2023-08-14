@@ -1,7 +1,7 @@
 version: '3'
 services:
   db:
-    image: postgres:alpine
+    image: postgres:latest
     restart: always
     environment:
       - POSTGRES_USER=postgres
@@ -15,7 +15,6 @@ services:
     build:
       context: .
       dockerfile: ./Dockerfile
-      container_name: my-fastapi-app
     depends_on:
       - db
     ports:
