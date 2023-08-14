@@ -17,3 +17,5 @@ services:
       dockerfile: ./Dockerfile
     ports:
       - 8081:8000
+    volumes:
+      - ./app:/app
