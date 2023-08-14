@@ -55,12 +55,10 @@ def login(email: str, password: str, db: Session = Depends(get_db)):
     else:
         last_token_generated = user.created_at 
         last_token_generated = last_token_generated.replace(tzinfo=None)  
-        print(last_token_generated, current_time)
         difference = current_time - last_token_generated
-        days_since_last_token = difference.days  
-        print(days_since_last_token)
+        days_since_last_token = difference.days
 
-        if days_since_last_token >= 45:
+        if days_since_last_token >= 44:
             token = create_token(user.email, secret, True)
             user.token = token
             db.commit()
