@@ -6,6 +6,7 @@ import datetime
 import uvicorn
 import psycopg2
 import models
+from datetime import datetime
 from psycopg2.extras import RealDictCursor
 from fastapi import FastAPI, requests, Request, Depends, status, HTTPException
 from db import get_db, engine
@@ -45,9 +46,27 @@ def login(email: str, password: str, db: Session = Depends(get_db)):
     if password != user.password:
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid credentials")
     secret = "test1234567890"
-    token = create_token(user.email, secret, True)
-    user.token = token
-    db.commit()
+    current_time = datetime.utcnow()
+
+    if user.token is None:
+        token = create_token(user.email, secret, True)
+        user.token = token
+        db.commit()
+    else:
+        last_token_generated = user.created_at 
+        last_token_generated = last_token_generated.replace(tzinfo=None)  
+        print(last_token_generated, current_time)
+        difference = current_time - last_token_generated
+        days_since_last_token = difference.days  
+        print(days_since_last_token)
+
+        if days_since_last_token >= 45:
+            token = create_token(user.email, secret, True)
+            user.token = token
+            db.commit()
+        else:
+            token = user.token
+    
     return {"message": "Logged in successfully"}, status.HTTP_200_OK
     
 
@@ -65,7 +84,3 @@ def validate() -> str:
         return {'message': f'Token is invalid'}, status.HTTP_401_UNAUTHORIZED
     
     return decoded, status.HTTP_200_OK
-
-
-if __name__ == "__main__":
-    uvicorn.run(app, host='0.0.0.0', port=8000)
