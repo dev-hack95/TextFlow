@@ -15,5 +15,8 @@ services:
     build:
       context: .
       dockerfile: ./Dockerfile
+      container_name: my-fastapi-app
+    depends_on:
+      - db
     ports:
       - 8081:8000
