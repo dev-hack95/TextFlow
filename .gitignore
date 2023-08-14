@@ -5,6 +5,9 @@ __pycache__/
 # C extensions
 *.so
 
+src/app/auth/logs
+src/app/auth/__pycache__
+src/app/__pycache__
 # Distribution / packaging
 .Python
 env/

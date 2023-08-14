@@ -13,10 +13,7 @@ services:
 
   app:
     build:
-      image: textflow-auth:1.0
       context: .
       dockerfile: ./Dockerfile
     ports:
       - 8081:8000
-    volumes:
-      - ./app

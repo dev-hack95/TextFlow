@@ -3,6 +3,7 @@ import sys
 import jwt
 import json
 import datetime
+import uvicorn
 import psycopg2
 import models
 from psycopg2.extras import RealDictCursor
@@ -64,3 +65,7 @@ def validate() -> str:
         return {'message': f'Token is invalid'}, status.HTTP_401_UNAUTHORIZED
     
     return decoded, status.HTTP_200_OK
+
+
+if "__name__" == __main__:
+    uvicorn.run(app, host='0.0.0.0', port=8000)
