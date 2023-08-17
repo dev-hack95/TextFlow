@@ -2,13 +2,17 @@ from sqlalchemy import create_engine
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
 from logger import logging
-from dotenv import load_dotenv
 from exception import CustomException
 import sys
+import os
 
-load_dotenv("./.env")
-#ip_addr = socket.gethostbyname(socket.gethostname())
-engine = create_engine("postgresql://postgres:postgres@192.168.29.217/auth_service")
+
+db_user = os.environ.get("POSTGRES_USER")
+db_password = os.environ.get("POSTGRES_PASSWORD")
+db_host = os.environ.get("POSTGRES_HOST")
+db_name = os.environ.get("POSTGRES_DB")
+
+engine = create_engine(f"postgresql://{db_user}:{db_password}@{db_host}/{db_name}")
 SessionLocal = sessionmaker(autoflush=False, bind=engine)
 Base = declarative_base()
 

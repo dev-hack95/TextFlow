@@ -1,4 +1,3 @@
-import os
 import jwt
 import datetime
 
