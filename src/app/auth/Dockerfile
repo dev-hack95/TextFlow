@@ -11,8 +11,6 @@ RUN pip install --no-cache-dir --upgrade pip
 RUN pip install --no-cache-dir -r requirements.txt
 
 COPY . /app/
-RUN chmod 777 /app/run.sh
-RUN bash /app/run.sh
-
+RUN service postgresql start
 EXPOSE 8000
 CMD ["uvicorn", "server:app", "--host", "0.0.0.0", "--port", "8000"]
