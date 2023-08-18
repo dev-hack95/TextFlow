@@ -9,6 +9,9 @@ from logger import logging
 from exception import CustomException
 from sqlalchemy.orm import Session
 
+if not engine.dialect.has_database(engine, "auth_service"):
+    engine.execute("CREATE DATABASE auth_service")
+
 models.Base.metadata.create_all(bind=engine)
 
 app = FastAPI()
