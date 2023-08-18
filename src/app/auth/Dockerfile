@@ -7,7 +7,6 @@ ENV POSTGRES_USER=postgres
 ENV POSTGRES_DB=auth_service
 ENV POSTGRES_PASSWORD=postgres
 
-RUN service postgresql status
 RUN service postgresql start
 WORKDIR /app
 COPY requirements.txt /app/
