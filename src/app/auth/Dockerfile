@@ -1,13 +1,18 @@
 FROM python:3.10-slim-bullseye
+
 RUN apt-get update \
    && apt-get install -y --no-install-recommends --no-install-suggests \
-   build-essential default-libmysqlclient-dev libpq-dev postgresql postgresql-contrib
+   build-essential libpq-dev postgresql postgresql-contrib
+
 WORKDIR /app
+
 COPY requirements.txt /app/
 RUN pip install --no-cache-dir --upgrade pip
 RUN pip install --no-cache-dir -r requirements.txt
-RUN chmod 777 run.sh
-RUN bash run.sh
+
 COPY . /app/
+RUN chmod 777 /app/run.sh
+RUN bash /app/run.sh
+
 EXPOSE 8000
 CMD ["uvicorn", "server:app", "--host", "0.0.0.0", "--port", "8000"]
