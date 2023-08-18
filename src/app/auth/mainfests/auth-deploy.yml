@@ -19,11 +19,11 @@ spec:
       containers:
         - name: textflow-auth
           imagePullPolicy: Always
-          image: devhack95/textflow-auth:1.0.0
+          image: devhack95/textflow-auth:1.1.0
           ports:
             - containerPort: 8000
           envFrom:
             - configMapRef:
-              name: auth-configmap
+                name: auth-configmap
             - secretRef:
-              name: auth-secret
+                name: auth-secret
