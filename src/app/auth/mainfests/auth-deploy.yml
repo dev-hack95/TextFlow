@@ -22,7 +22,7 @@ spec:
           image: devhack95/textflow-auth
           ports:
             - containerPort: 8000
-          envForm:
+          envFrom:
             - configMapRef:
               name: auth-configmap
             - secretRef:
