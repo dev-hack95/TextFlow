@@ -42,7 +42,7 @@ def login(email: str, password: str, db: Session = Depends(get_db)):
     
     if password != user.password:
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid credentials")
-    secret = "test1234567890"
+   
     current_time = datetime.utcnow()
 
     if user.token is None:

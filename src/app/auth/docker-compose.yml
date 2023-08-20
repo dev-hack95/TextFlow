@@ -10,12 +10,3 @@ services:
       - '5432:5432'
     volumes:
       - ./db:/var/lib/postgresql/data
-
-  app:
-    build:
-      context: .
-      dockerfile: ./Dockerfile
-    depends_on:
-      - db
-    ports:
-      - 8081:8000
