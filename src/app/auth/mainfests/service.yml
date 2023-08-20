@@ -1,10 +1,10 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: auth
+  name: textflow-auth
 spec:
   selector:
-    app: auth
+    app: textflow-auth
   type: ClusterIP
   ports:
     - port: 8000
