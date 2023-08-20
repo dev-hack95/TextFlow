@@ -17,12 +17,6 @@ SessionLocal = sessionmaker(autoflush=False, bind=engine)
 Base = declarative_base()
 
 
-logging.info("Creating the database and tables")
-create_database_command = f'CREATE DATABASE auth_service;'
-engine.execute(create_database_command)
-logging.info("Database 'auth_service' created")
-
-
 def get_db():
     db = SessionLocal()
     try:
