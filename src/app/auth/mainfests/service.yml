@@ -5,8 +5,9 @@ metadata:
 spec:
   selector:
     app: textflow-auth
-  type: ClusterIP
+  type: NodePort
   ports:
     - port: 8000
       targetPort: 8000
       protocol: TCP
+      nodePort: 30007
