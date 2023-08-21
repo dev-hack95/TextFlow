@@ -9,13 +9,12 @@ from logger import logging
 from exception import CustomException
 from sqlalchemy.orm import Session
 
-if not engine.dialect.has_database(engine, "auth_service"):
-    engine.execute("CREATE DATABASE auth_service")
 
 models.Base.metadata.create_all(bind=engine)
 
 app = FastAPI()
 
+secrets = "test12345"
 
 @app.post("/v1/signin")
 def signin(email: str, password: str, db: Session = Depends(get_db)):
@@ -46,7 +45,7 @@ def login(email: str, password: str, db: Session = Depends(get_db)):
     current_time = datetime.utcnow()
 
     if user.token is None:
-        token = create_token(user.email, os.environ.get("JWT_SECRET_KEY"), True)
+        token = create_token(user.email, secrets, True)
         user.token = token
         db.commit()
     else:
@@ -56,7 +55,7 @@ def login(email: str, password: str, db: Session = Depends(get_db)):
         days_since_last_token = difference.days
 
         if days_since_last_token >= 44:
-            token = create_token(user.email, os.environ.get("JWT_SECRET_KEY"), True)
+            token = create_token(user.email, secrets, True)
             user.token = token
             db.commit()
         else:
@@ -74,7 +73,7 @@ def validate() -> str:
     
     encoded_jwt = encoded_jwt.split(" ")[1]
     try:
-        decoded = decode_token(encoded_token=encoded_jwt, secret=os.environ.get("JWT_SECRET_KEY"))
+        decoded = decode_token(encoded_token=encoded_jwt, secret=secrets)
     except:
         return {'message': f'Token is invalid'}, status.HTTP_401_UNAUTHORIZED
     
