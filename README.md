@@ -4,7 +4,7 @@ TextFlow
 A short description of the project.
 
 Architecture
-![](https://github.com/dev-hack95/TextFlow/blob/main/reports/figures/TextFlow.png)
+![](https://github.com/dev-hack95/TextFlow/blob/main/reports/figures/Textflow_1.png)
 
 Project Organization
 ------------
