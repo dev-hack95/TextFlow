@@ -40,11 +40,19 @@ Project Organization
     │   │
     │   ├── app            <- Backend
     │   │    └── auth
+    │   │        ├──  mainfests      <- K8S deployment yaml
+    │   │        |        ├──  auth-deploy.yml
+    │   │        │        ├──  configmap.yml
+    │   │        │        ├──  secret.yml
+    │   │        │        └──  service.yml
     │   │        ├── __init__.py
     │   │        ├── db.py
     │   │        ├── docker-compose.yml
     │   │        ├── Dockerfile
     │   │        ├── models.py
+    │   │        ├── logger.py
+    │   │        ├── exception.py
+    │   │        ├── tokens.py
     │   │        └── server.py
     │   │
     │   ├── models         <- Scripts to train models and then use trained models to make
