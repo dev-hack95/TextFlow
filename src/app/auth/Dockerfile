@@ -1,8 +1,7 @@
 FROM python:3.10-slim-bullseye
-RUN apt-get update -y \
-&& apt-get install --no-install-recommends  --no-install-suggests -y \
-build-essential gcc python3-pip libpq-dev
-
+RUN apt-get update \
+   && apt-get install -y --no-install-recommends --no-install-suggests \
+   build-essential default-libmysqlclient-dev libpq-dev
 WORKDIR /app
 COPY requirements.txt /app/
 RUN pip install --no-cache-dir --upgrade pip

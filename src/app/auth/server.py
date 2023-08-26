@@ -60,6 +60,7 @@ def login(email: str, password: str, db: Session = Depends(get_db)):
             db.commit()
         else:
             token = user.token
+            return token
     
     return {"message": "Logged in successfully"}, status.HTTP_200_OK
     
