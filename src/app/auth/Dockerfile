@@ -1,7 +1,7 @@
 FROM python:3.10-slim-bullseye
 RUN apt-get update -y \
-&& apt-get install --no-install-recommends -y \
-build-essential gcc python3-pip
+&& apt-get install --no-install-recommends  --no-install-suggests -y \
+build-essential gcc python3-pip libpq-dev
 
 WORKDIR /app
 COPY requirements.txt /app/
