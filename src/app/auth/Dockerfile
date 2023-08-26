@@ -1,4 +1,8 @@
-FROM python:3.10
+FROM python:3.10-slim-bullseye
+RUN apt-get update -y \
+&& apt-get install --no-install-recommends -y \
+build-essential gcc python3-pip
+
 WORKDIR /app
 COPY requirements.txt /app/
 RUN pip install --no-cache-dir --upgrade pip
