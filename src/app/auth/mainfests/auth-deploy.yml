@@ -27,3 +27,4 @@ spec:
                 name: auth-configmap
             - secretRef:
                 name: auth-secret
+
