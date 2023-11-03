@@ -1,5 +1,7 @@
-FROM python:3.10
+FROM python:3.10-slim-bullseye
 WORKDIR /app
+RUN apt update -y
+RUN apt install -y --no-install-recommends --no-install-suggests build-essential gcc
 COPY requirements.txt /app/
 RUN pip install --no-cache-dir --upgrade pip
 RUN pip install --no-cache-dir -r requirements.txt

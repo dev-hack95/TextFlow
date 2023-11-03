@@ -1,5 +1,6 @@
 import os
 import datetime
+from typing import Literal
 import models
 from datetime import datetime
 from fastapi import FastAPI, Request, Depends, status, HTTPException
@@ -8,7 +9,6 @@ from tokens import create_token, decode_token
 from logger import logging
 from exception import CustomException
 from sqlalchemy.orm import Session
-
 
 models.Base.metadata.create_all(bind=engine)
 
@@ -66,11 +66,11 @@ def login(email: str, password: str, db: Session = Depends(get_db)):
     
 
 @app.post("/v1/validate")
-def validate() -> str:
+def validate():
     encoded_jwt = Request.headers["Authorization"]
 
     if not encoded_jwt:
-        return {"message": "Missing Credentials"}, 401
+        return {"message": "Missing Credentials"}, status.HTTP_401_UNAUTHORIZED
     
     encoded_jwt = encoded_jwt.split(" ")[1]
     try:
