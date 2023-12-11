@@ -48,12 +48,12 @@ def upload():
             return {"error": "Only Import one file"}, 400
         
         for _, file in request.files.items():
-            err = utils.upload(file, fs, channel, access_dict[0])
+            message = utils.upload(file, fs, channel, access_dict[0])
 
-            if err:
-                return str(err)
+            # if err:
+            #     return str(err)
             
-        return "Uploded Succesfully!", 200
+        return jsonify(message, "Uploded Succesfully!", 200)
     else:
         return "Not Authorized!", 401
 

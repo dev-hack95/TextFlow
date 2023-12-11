@@ -1,13 +1,13 @@
 import os
 import pika
 import json
-from fastapi import status
+
 
 def upload(file, fs, channel, access):
     try:
         file_id = fs.put(file)
     except Exception as err:
-        return status.HTTP_500_INTERNAL_SERVER_ERROR, str(err)
+        return 500, str(err)
     
     message = {
         "video_id": str(file_id),
@@ -27,3 +27,5 @@ def upload(file, fs, channel, access):
     except Exception as err:
         fs.delete(file_id)
         return str(err)
+    
+    return message
