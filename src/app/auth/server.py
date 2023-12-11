@@ -1,9 +1,12 @@
 import os
-import datetime
+from datetime import datetime, timezone
 from typing import Literal
+import jwt
+from jwt import algorithms
 import models
-from datetime import datetime
 from fastapi import FastAPI, Request, Depends, status, HTTPException
+from datetime import datetime
+from flask import Flask
 from db import get_db, engine
 from tokens import create_token, decode_token
 from logger import logging
@@ -44,38 +47,46 @@ def login(email: str, password: str, db: Session = Depends(get_db)):
    
     current_time = datetime.utcnow()
 
-    if user.token is None:
-        token = create_token(user.email, secrets, True)
-        user.token = token
-        db.commit()
-    else:
-        last_token_generated = user.created_at 
-        last_token_generated = last_token_generated.replace(tzinfo=None)  
-        difference = current_time - last_token_generated
-        days_since_last_token = difference.days
+    #if user.token == "":
+    token = create_token(user.email, secrets, True)
+        
+    #     user.token = token
+    #     db.commit()
+    # else:
+    #     last_token_generated = user.created_at 
+    #     last_token_generated = last_token_generated.replace(tzinfo=None)  
+    #     difference = current_time - last_token_generated
+    #     days_since_last_token = difference.days
 
-        if days_since_last_token >= 44:
-            token = create_token(user.email, secrets, True)
-            user.token = token
-            db.commit()
-        else:
-            token = user.token
-            return token
+    #     if days_since_last_token >= 44:
+    #         token = create_token(user.email, secrets, True)
+    #         user.token = token
+    #         db.commit()
+    #     else:
+    #         token = user.token
+    #         return token
     
-    return {"message": "Logged in successfully"}, status.HTTP_200_OK
+    return token, status.HTTP_200_OK
     
 
 @app.post("/v1/validate")
-def validate():
-    encoded_jwt = Request.headers["Authorization"]
-
+def validate(request: Request):
+    encoded_jwt = request.headers.get("Authorization")
     if not encoded_jwt:
         return {"message": "Missing Credentials"}, status.HTTP_401_UNAUTHORIZED
     
     encoded_jwt = encoded_jwt.split(" ")[1]
+
     try:
-        decoded = decode_token(encoded_token=encoded_jwt, secret=secrets)
-    except:
-        return {'message': f'Token is invalid'}, status.HTTP_401_UNAUTHORIZED
+        decoded = jwt.decode(encoded_jwt, secrets, algorithms=["HS256"])
+    except jwt.exceptions.DecodeError as err:
+        if "Expiration Time claim (exp) must be an integer" in str(err):
+            decoded = jwt.decode(encoded_jwt, secrets, algorithms=["HS256"], options={"verify_exp": False})
+            exp_claim = decoded.get("exp")
+            if exp_claim is not None and isinstance(exp_claim, str):
+                decoded["exp"] = int(datetime.fromisoformat(exp_claim).replace(tzinfo=timezone.utc).timestamp())
+        else:
+            raise str(err)
+
     
     return decoded, status.HTTP_200_OK

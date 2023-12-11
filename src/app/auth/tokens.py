@@ -1,7 +1,7 @@
 import jwt
 import datetime
 
-def create_token(user: str, secret: str, authz: bool) -> str:
+def create_token(user, secret, authz: bool) -> str:
     token = jwt.encode(
         {
             "user": user,
@@ -15,7 +15,6 @@ def create_token(user: str, secret: str, authz: bool) -> str:
 
     return token
 
-def decode_token(encoded_token: str, secret: str) -> str:
-    return jwt.decode(
-        encoded_token, secret, algorithms=["HS256"]
-    )
+def decode_token(encoded_token: str, secret: str):
+        decoded = jwt.decode(encoded_token, secret, algorithms=["HS256"])
+        return decoded
