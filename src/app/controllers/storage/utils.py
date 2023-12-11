@@ -7,12 +7,12 @@ def upload(file, fs, channel, access):
     try:
         file_id = fs.put(file)
     except Exception as err:
-        return status.HTTP_500_INTERNAL_SERVER_ERROR
+        return status.HTTP_500_INTERNAL_SERVER_ERROR, str(err)
     
     message = {
         "video_id": str(file_id),
         "audio_id": None,
-        "username": access["username"],
+        "username": access["user"],
     }
 
     try:
@@ -21,9 +21,9 @@ def upload(file, fs, channel, access):
             routing_key="video",
             body=json.dumps(message),
             properties = pika.BasicProperties(
-                delivery_mode=pika.spec.PRESISTENT_DELIVERY_MODE
+                delivery_mode=pika.spec.PERSISTENT_DELIVERY_MODE
             ),
         )
     except Exception as err:
         fs.delete(file_id)
-        return err
+        return str(err)

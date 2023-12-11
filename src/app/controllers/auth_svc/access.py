@@ -1,20 +1,16 @@
 import os
 import requests
-from fastapi import status
 
 def login(request):
     auth = request.authorization
     if not auth:
-        return None, ("Missing Credentials", status.HTTP_401_UNAUTHORIZED)
-    
-    basicAuth = (auth.username, auth.password)
+        return None, ("Missing Credentials", 401)
 
     response = requests.post(
-        f"http://{os.environ.get('AUTH_SVC_ADDRESS')}/v1/login",
-        auth=basicAuth
+        f"http://localhost:8000/v1/login?email={auth.username}&password={auth.password}"
     )
 
-    if response.status_code == status.HTTP_200_OK:
+    if response.status_code == 200:
         return  response.text, None
     else:
-        return None, (response.text, f"Authentication failed with code {response.status_code}", status.HTTP_503_SERVICE_UNAVAILABLE)
+        return None, (response.text, f"Authentication failed with code {response.status_code}", 503)
