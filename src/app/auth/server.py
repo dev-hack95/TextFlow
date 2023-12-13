@@ -45,27 +45,7 @@ def login(email: str, password: str, db: Session = Depends(get_db)):
     if password != user.password:
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid credentials")
    
-    current_time = datetime.utcnow()
-
-    #if user.token == "":
     token = create_token(user.email, secrets, True)
-        
-    #     user.token = token
-    #     db.commit()
-    # else:
-    #     last_token_generated = user.created_at 
-    #     last_token_generated = last_token_generated.replace(tzinfo=None)  
-    #     difference = current_time - last_token_generated
-    #     days_since_last_token = difference.days
-
-    #     if days_since_last_token >= 44:
-    #         token = create_token(user.email, secrets, True)
-    #         user.token = token
-    #         db.commit()
-    #     else:
-    #         token = user.token
-    #         return token
-    
     return token, status.HTTP_200_OK
     
 
@@ -86,7 +66,7 @@ def validate(request: Request):
             if exp_claim is not None and isinstance(exp_claim, str):
                 decoded["exp"] = int(datetime.fromisoformat(exp_claim).replace(tzinfo=timezone.utc).timestamp())
         else:
-            raise str(err)
+            raise err
 
     
-    return decoded, status.HTTP_200_OK
+    return decoded

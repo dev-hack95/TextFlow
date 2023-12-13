@@ -26,29 +26,29 @@ connection = pika.BlockingConnection(pika.ConnectionParameters(host='192.168.29.
 channel = connection.channel()
 
 @server.post("/v1/server/login")
-def login():
+def login() -> str:
     token, err = access.login(request)
 
     if not err:
-        return token
+        return str(token)
     else:
         return str(err)
 
 @server.route("/v1/server/upload", methods=["POST", "GET"])
 def upload():
-    access, err = validate.token(request)
+    access, err= validate.token(request)
 
     try:
         access_dict = json.loads(access)
     except json.JSONDecodeError:
         return {"error": "Invalid JSON format in the 'access' token"}, 400
 
-    if access_dict[0]["admin"]:
+    if access_dict["admin"]:
         if len(request.files) > 1 or len(request.files) < 1:
             return {"error": "Only Import one file"}, 400
         
         for _, file in request.files.items():
-            message = utils.upload(file, fs, channel, access_dict[0])
+            message = utils.upload(file, fs, channel, access_dict)
 
             # if err:
             #     return str(err)
@@ -60,7 +60,7 @@ def upload():
 
 
     
-@server.get("/v1/server/download")
+@server.route("/v1/server/download", methods=["GET"])
 def download():
     pass
 

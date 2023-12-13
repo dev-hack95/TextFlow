@@ -10,8 +10,8 @@ def upload(file, fs, channel, access):
         return 500, str(err)
     
     message = {
-        "video_id": str(file_id),
-        "audio_id": None,
+        "video_fid": str(file_id),
+        "mp3_fid": None,
         "username": access["user"],
     }
 
