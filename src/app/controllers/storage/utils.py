@@ -12,7 +12,8 @@ def upload(file, fs, channel, access):
     message = {
         "video_fid": str(file_id),
         "mp3_fid": None,
-        "username": access["user"],
+        "text_id": None,
+        "user": access["user"],
     }
 
     try:
