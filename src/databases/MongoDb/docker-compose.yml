@@ -1,0 +1,17 @@
+version: '3.7'
+services:
+  db:
+    image: mongo:4.0.4
+    container_name: mongodb_1
+    environment:
+      - MONGODB_INITDB_ROOT_USERNAME=root
+      - MONGODB_INITDB_ROOT_PASSWORD=rushi12345
+    ports:
+      - '27017:27017'
+    volumes:
+      - ./db:/data/db
+
+
+volumes:
+  db:
+    driver: local
