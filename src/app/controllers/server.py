@@ -5,6 +5,7 @@ import gridfs
 from pymongo import MongoClient
 from dotenv import load_dotenv
 from flask import Flask, request, jsonify
+from bson.objectid import ObjectId
 from auth_svc import access
 from auth import validate
 from storage import utils
@@ -14,6 +15,8 @@ load_dotenv()
 MONGODB_URL = 'mongodb://192.168.29.186:27017'
 mongo_client = MongoClient(MONGODB_URL)
 db_instance = mongo_client.get_database("videos")
+db_text = mongo_client.text
+fs_text = gridfs.GridFS(db_text)
 
 # Instnace of classes we are using
 server = Flask(__name__)
@@ -58,11 +61,30 @@ def upload():
         return "Not Authorized!", 401
 
 
-
     
 @server.route("/v1/server/download", methods=["GET"])
 def download():
-    pass
+    access, err= validate.token(request)
+
+    try:
+        access_dict = json.loads(access)
+    except json.JSONDecodeError:
+        return {"error": "Invalid JSON format in the 'access' token"}, 400
+    
+    if access_dict["admin"]:
+        fid_string = request.args.get("fid")
+
+        if not fid_string:
+            return {"error":"No File ID provided"}, 400
+        
+        try:
+            out = fs_text.get(ObjectId(fid_string))
+            print(out)
+        except Exception as err:
+            raise err
+        
+    return out
+
 
 
 if __name__ == "__main__":
