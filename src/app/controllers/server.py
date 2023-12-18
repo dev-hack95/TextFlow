@@ -55,11 +55,8 @@ def get_rabbitmq_message():
         print(f"Error getting RabbitMQ message: {e}")
         return None
     finally:
-        # Acknowledge the message
         if 'delivery_tag' in locals():
             channel.basic_ack(delivery_tag=delivery_tag)
-        
-        # Close the channel and connection
         if 'channel' in locals() and channel.is_open:
             channel.close()
         if 'connection' in locals() and connection.is_open:
