@@ -10,7 +10,6 @@ from bson.objectid import ObjectId
 from auth_svc import access
 from auth import validate
 from storage import utils
-from threading import Thread, Event
 
 # config
 load_dotenv()
