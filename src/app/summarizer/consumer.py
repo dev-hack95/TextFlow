@@ -1,5 +1,6 @@
 import os
 import sys
+import requests
 import logging
 import pika
 import gridfs
@@ -10,7 +11,7 @@ from converter import converter
 logging.basicConfig(level=logging.INFO)
 
 def main():
-    client = MongoClient('mongodb://192.168.29.186:27017')
+    client = MongoClient('mongodb://192.168.43.86:27017')
     db_videos = client.videos
     #db_mp3 = client.mp3
     db_text = client.text
@@ -19,7 +20,7 @@ def main():
     #fs_mp3s = gridfs.GridFS(db_mp3)
     fs_text = gridfs.GridFS(db_text)
 
-    connection = pika.BlockingConnection(pika.ConnectionParameters(host='192.168.29.186', port=5672))
+    connection = pika.BlockingConnection(pika.ConnectionParameters(host='192.168.43.86', port=5672))
     channel = connection.channel()
 
     def callback(ch, method, properties, body):

@@ -10,7 +10,7 @@ import os
 load_dotenv()
 db_user = 'postgres' #os.getenv("POSTGRES_USER")
 db_password = 'postgres' #os.getenv("POSTGRES_PASSWORD")
-db_host = '192.168.29.186' #os.getenv("POSTGRES_HOST")
+db_host = '192.168.43.86' #os.getenv("POSTGRES_HOST")
 db_name = 'postgres' #os.getenv("POSTGRES_DB")
 
 engine = create_engine(f"postgresql://{db_user}:{db_password}@{db_host}/{db_name}")
