@@ -5,11 +5,11 @@ import gridfs
 from pymongo import MongoClient
 from dotenv import load_dotenv
 from flask import Flask, request, jsonify
-from flask_socketio import SocketIO
 from bson.objectid import ObjectId
 from auth_svc import access
 from auth import validate
 from storage import utils
+from flask_cors import CORS
 
 # config
 load_dotenv()
@@ -21,16 +21,14 @@ fs_text = gridfs.GridFS(db_text)
 
 # Instnace of classes we are using
 server = Flask(__name__)
-socketio = SocketIO(server)
+CORS(server, origins="*", supports_credentials=True)
 fs = gridfs.GridFS(db_instance) # Video database (It is used to  upload large files in mongodb)
 rabbitmq_host = '192.168.43.86'
 rabbitmq_port = 5672
 rabbitmq_queue = 'text'
 rabbitmq_credentials = pika.PlainCredentials('guest', 'guest')
 
-# Connecting RabbitMQ
 
-# Setting up a rabbitMQ connction
 connection = pika.BlockingConnection(pika.ConnectionParameters(host='192.168.43.86', port=5672))
 channel = connection.channel()
 
@@ -125,4 +123,4 @@ def getMessages():
     return messages
 
 if __name__ == "__main__":
-    server.run(debug=True, port=5001)
+    server.run(host="0.0.0.0",debug=True, port=5001)

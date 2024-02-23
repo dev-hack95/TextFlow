@@ -17,10 +17,10 @@ def wav_to_text_summary(file_path):
     result = model.transcribe(audio)
     model = TransformerSummarizer(transformer_type="XLNet", transformer_model_key="xlnet-base-cased")
     summary = ''.join(model(result["text"], max_length=4000))
-    return summary
+    return summary, result
 
 
-def start(message, fs_videos, fs_text, channel):
+def start(message, fs_videos, fs_text, fs_all_text, channel):
     message = json.loads(message)
     print(str(message))
     video_data = fs_videos.get(ObjectId(message["video_fid"]))
@@ -42,13 +42,15 @@ def start(message, fs_videos, fs_text, channel):
 
     # mp3fid = fs_mp3s.put(data)
 
-    output = wav_to_text_summary(mp3_filename)
+    output, result = wav_to_text_summary(mp3_filename)
     print(output)
     output_bytes = output.encode('utf-8')
-    
-    fid = fs_text.put(output_bytes)
+    all_text_bytes = result.encode('utf-8')
 
+    fid = fs_text.put(output_bytes)
+    all_text_fid = fs_all_text(all_text_bytes)
     #message["mp3_fid"] = str(mp3fid)
+    message["all_text"] = str(all_text_fid)
     message["text_id"] = str(fid)
     print(message)
 

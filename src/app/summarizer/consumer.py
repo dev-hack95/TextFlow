@@ -13,18 +13,18 @@ logging.basicConfig(level=logging.INFO)
 def main():
     client = MongoClient('mongodb://192.168.43.86:27017')
     db_videos = client.videos
-    #db_mp3 = client.mp3
+    db_all_text = client.all_text
     db_text = client.text
 
     fs_videos = gridfs.GridFS(db_videos)
-    #fs_mp3s = gridfs.GridFS(db_mp3)
+    fs_all_text = gridfs.GridFS(db_all_text)
     fs_text = gridfs.GridFS(db_text)
 
     connection = pika.BlockingConnection(pika.ConnectionParameters(host='192.168.43.86', port=5672))
     channel = connection.channel()
 
     def callback(ch, method, properties, body):
-            err = converter.start(body, fs_videos, fs_text, ch)
+            err = converter.start(body, fs_videos, fs_text, fs_all_text, ch)
             if err:
                 ch.basic_nack(delivery_tag=method.delivery_tag)
             else:

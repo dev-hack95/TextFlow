@@ -13,6 +13,7 @@ def upload(file, fs, channel, access):
         "video_fid": str(file_id),
         "mp3_fid": None,
         "text_id": None,
+        "all_text": None,
         "user": access["user"],
     }
 
